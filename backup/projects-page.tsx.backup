@@ -1,0 +1,226 @@
+import { ScrollSection } from '@/components/common/scroll-section'
+import { MagneticButton } from '@/components/common/magnetic-button'
+import HolographicBackground from '@/components/backgrounds/holographic-background'
+import Interactive3DSection from '@/app/components/Interactive3DSection'
+
+export const metadata = {
+  title: "Projelerimiz - LnY",
+  description: "LnY'nin gerçekleştirdiği AR-GE, mekanik tasarım ve yazılım geliştirme projeleri."
+}
+
+const projects = [
+  {
+    id: 'cfd-analizi-projesi',
+    title: 'Otomotiv Parça CFD Analizi',
+    description: 'Otomotiv yan sanayi için aerodinamik optimizasyon çalışması',
+    tags: ['CFD', 'Otomotiv', 'Aerodinamik'],
+    category: 'Mekanik Tasarım',
+    image: '/projects/project-1.jpg',
+    duration: '3 ay',
+    client: 'Otomotiv Şirketi A', 
+    status: 'Tamamlandı'
+  },
+  {
+    id: 'otomasyon-sistemi',
+    title: 'Endüstriyel Otomasyon Sistemi',
+    description: 'Üretim hattı için PLC tabanlı otomasyon çözümü',
+    tags: ['Otomasyon', 'PLC', 'SCADA'],
+    category: 'Yazılım',
+    image: '/projects/project-2.jpg',
+    duration: '4 ay',
+    client: 'İmalat Firması B',
+    status: 'Tamamlandı'
+  },
+  {
+    id: '3d-model-viewer',
+    title: 'İnteraktif 3D Model Görüntüleyici',
+    description: 'Web tabanlı profesyonel 3D model inceleme platformu',
+    tags: ['3D', 'WebGL', 'Three.js', 'React'],
+    category: 'Yazılım',
+    image: '/projects/3d-viewer.jpg',
+    duration: '2 ay',
+    client: 'LnY İç Proje',
+    status: 'Tamamlandı',
+    isInteractive: true
+  },
+  {
+    id: 'tubitak-projesi',
+    title: 'TÜBİTAK 1501 Projesi',
+    description: 'Yenilikçi malzeme geliştirme AR-GE projesi',
+    tags: ['AR-GE', 'Malzeme', 'İnovasyon'],
+    category: 'AR-GE',
+    image: '/projects/project-3.jpg',
+    duration: '18 ay',
+    client: 'Teknoloji Firması C',
+    status: 'Devam Ediyor'
+  }
+]
+
+const categories = ['Tümü', 'AR-GE', 'Mekanik Tasarım', 'Yazılım']
+const tags = ['CFD', 'Otomasyon', 'AR-GE', '3D', 'WebGL', 'TÜBİTAK', 'Malzeme', 'Aerodinamik']
+
+export default function ProjectsPage() {
+  return (
+    <HolographicBackground intensity="medium">
+      <div className="pt-20">
+        {/* Hero Section */}
+        <ScrollSection className="py-20 bg-gradient-to-br from-transparent via-black/20 to-black/40">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="font-heading text-5xl md:text-6xl font-bold mb-6 text-white">
+                Projelerimiz
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Çeşitli sektörlerde gerçekleştirdiğimiz başarılı proje örneklerini keşfedin
+              </p>
+            </div>
+          </div>
+        </ScrollSection>
+
+        {/* Filter Section */}
+        <ScrollSection className="py-12 border-b border-gray-200 dark:border-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  className="px-6 py-3 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors"
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 text-sm bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 rounded-full"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </ScrollSection>
+
+        {/* Interactive 3D Viewer Showcase */}
+        <ScrollSection className="py-20 bg-gradient-to-br from-dark-200 via-dark-100 to-dark-50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <Interactive3DSection />
+            </div>
+          </div>
+        </ScrollSection>
+
+        {/* Projects Grid */}
+        <ScrollSection className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className={`group rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden ${
+                    project.isInteractive 
+                      ? 'bg-gradient-to-br from-dark-50 to-dark-100 border border-primary/30' 
+                      : 'bg-white dark:bg-dark-50'
+                  }`}
+                >
+                  {/* Project Image/Interactive Placeholder */}
+                  <div className={`aspect-video flex items-center justify-center ${
+                    project.isInteractive
+                      ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-dark-100'
+                      : 'bg-gradient-to-br from-primary/20 to-primary/5'
+                  }`}>
+                    {project.isInteractive ? (
+                      <div className="text-center">
+                        <div className="text-6xl mb-2">🎮</div>
+                        <div className="text-primary font-semibold">İnteraktif Demo</div>
+                      </div>
+                    ) : (
+                      <div className="text-6xl opacity-30">📊</div>
+                    )}
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
+                        {project.category}
+                      </span>
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        project.status === 'Tamamlandı' 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                      }`}>
+                        {project.status}
+                      </span>
+                    </div>
+                    
+                    <h3 className={`font-heading font-bold text-xl mb-3 ${
+                      project.isInteractive ? 'text-white' : 'text-gray-900 dark:text-gray-100'
+                    }`}>
+                      {project.title}
+                    </h3>
+                    
+                    <p className={`mb-4 text-sm leading-relaxed ${
+                      project.isInteractive ? 'text-gray-300' : 'text-gray-600 dark:text-gray-400'
+                    }`}>
+                      {project.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-1 text-xs bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div>{project.duration}</div>
+                      </div>
+                      
+                      <MagneticButton
+                        href={project.isInteractive ? '/viewer' : `/projects/${project.id}`}
+                        variant="ghost"
+                        size="sm"
+                        className={project.isInteractive ? 'text-primary hover:text-primary/80 border border-primary/30' : 'text-primary hover:text-primary/80'}
+                      >
+                        {project.isInteractive ? 'Demo Dene →' : 'Detayları →'}
+                      </MagneticButton>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ScrollSection>
+
+        {/* CTA Section */}
+        <ScrollSection className="py-20 bg-gray-50 dark:bg-dark-100">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8">
+                Bir Sonraki Proje Sizinki Olsun
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400 mb-12">
+                Benzer bir projeniz mi var? Uzman ekibimizle ücretsiz değerlendirme yapın
+              </p>
+              
+              <MagneticButton
+                href="/contact"
+                className="bg-primary hover:bg-primary/90 text-dark px-12 py-4 text-lg font-semibold"
+              >
+                Projenizi Değerlendirin
+              </MagneticButton>
+            </div>
+          </div>
+        </ScrollSection>
+      </div>
+    </HolographicBackground>
+  )
+}

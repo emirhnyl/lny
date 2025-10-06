@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String  @unique
+  password String
+  role     Role    @default(EDITOR)
+  isActive Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  projects     Project[]
+  blogPosts    BlogPost[]
+  activityLogs ActivityLog[]
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  AUTHOR
+  VIEWER
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  description String
+  content     String
+  category    String
+  tags        String
+  status      ProjectStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  
+  // Media
+  glbModelUrl  String?
+  thumbnailUrl String?
+  images       String
+  
+  // Project Details
+  problem     String? // Proje sorunu/ihtiyacı
+  solution    String? // Çözüm yaklaşımı
+  results     String? // Sonuçlar (virgülle ayrılmış)
+  challenges  String? // Karşılaşılan zorluklar (virgülle ayrılmış)
+  duration    String? // Proje süresi
+  technologies String? // Kullanılan teknolojiler (virgülle ayrılmış)
+  
+  // Testimonial/Referans
+  testimonialContent String?
+  testimonialAuthor  String?
+  testimonialRole    String?
+  testimonialCompany String?
+  
+  // Links
+  demoUrl  String?
+  githubUrl String?
+  
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+  
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model BlogPost {
+  id         String     @id @default(cuid())
+  slug       String     @unique
+  title      String
+  content    String
+  coverImage String?
+  categoryId String
+  tags       String
+  status     PostStatus @default(DRAFT)
+  featured   Boolean    @default(false)
+  
+  category BlogCategory @relation(fields: [categoryId], references: [id])
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+  
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model BlogCategory {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  name        String
+  description String?
+  
+  posts BlogPost[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  folder       String?
+  
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model FormSubmission {
+  id      String           @id @default(cuid())
+  type    FormType
+  name    String
+  email   String
+  message String
+  data    String
+  status  SubmissionStatus @default(NEW)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum FormType {
+  CONTACT
+  PROJECT_REQUEST
+  NEWSLETTER
+  OTHER
+}
+
+enum SubmissionStatus {
+  NEW
+  IN_PROGRESS
+  COMPLETED
+  SPAM
+}
+
+model Service {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  title       String
+  description String
+  features    String
+  isActive    Boolean @default(true)
+  orderIndex  Int     @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id       String @id @default(cuid())
+  key      String @unique
+  value    String
+  category String @default("general")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id          String @id @default(cuid())
+  action      String
+  entity      String
+  entityId    String?
+  description String
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+}

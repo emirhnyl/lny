@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LnY Interactive Background Concepts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #111; 
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .concept {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            border-bottom: 2px solid #F5C10E;
+            cursor: none;
+            overflow: hidden;
+        }
+        
+        .concept-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #F5C10E;
+        }
+        
+        .concept-description {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        /* Concept 1: Neural Network */
+        .neural-network {
+            background: radial-gradient(circle at 30% 70%, rgba(245, 193, 14, 0.1), transparent),
+                        radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.08), transparent),
+                        linear-gradient(135deg, #0a0a0a, #1a1a1a);
+        }
+        
+        .node {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #F5C10E;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(245, 193, 14, 0.6);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        .connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                rgba(245, 193, 14, 0.8) 0%, 
+                rgba(245, 193, 14, 0.2) 50%, 
+                rgba(139, 92, 246, 0.4) 100%
+            );
+            transform-origin: left center;
+            animation: dataFlow 3s linear infinite;
+        }
+        
+        /* Concept 2: Geometric Particles */
+        .geometric {
+            background: linear-gradient(45deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+        }
+        
+        .geo-particle {
+            position: absolute;
+            border: 1px solid #F5C10E;
+            background: rgba(245, 193, 14, 0.1);
+            animation: rotate 8s linear infinite, float 4s ease-in-out infinite alternate;
+        }
+        
+        .triangle { 
+            width: 0; height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 14px solid rgba(245, 193, 14, 0.6);
+            background: none !important;
+            border-top: none !important;
+        }
+        
+        .square { width: 12px; height: 12px; }
+        .diamond { width: 10px; height: 10px; transform: rotate(45deg); }
+        .hexagon {
+            width: 20px; height: 12px;
+            background: rgba(139, 92, 246, 0.4);
+            position: relative;
+        }
+        .hexagon:before, .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+        .hexagon:before {
+            bottom: 100%;
+            border-bottom: 6px solid rgba(139, 92, 246, 0.4);
+        }
+        .hexagon:after {
+            top: 100%;
+            border-top: 6px solid rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Concept 3: Wave Field */
+        .wave-field {
+            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #0a0a0a 100%);
+        }
+        
+        .wave-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(245, 193, 14, 0.6) 50%, 
+                transparent 100%
+            );
+            animation: waveMove 6s ease-in-out infinite;
+        }
+        
+        /* Concept 4: Constellation */
+        .constellation {
+            background: radial-gradient(ellipse at top, #0f0f23 0%, #0a0a0a 100%);
+        }
+        
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(255,255,255,0.8);
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+        
+        .constellation-line {
+            position: absolute;
+            height: 1px;
+            background: rgba(245, 193, 14, 0.3);
+            transform-origin: left center;
+        }
+        
+        /* Concept 5: Matrix Rain */
+        .matrix {
+            background: linear-gradient(180deg, #0d1b0d 0%, #0a0a0a 100%);
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                transparent 0%,
+                rgba(245, 193, 14, 0.8) 20%,
+                rgba(245, 193, 14, 0.4) 40%,
+                transparent 60%
+            );
+            animation: matrixFall 4s linear infinite;
+        }
+        
+        /* Concept 6: Fluid Morphing */
+        .fluid {
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0a 100%);
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: morphing 8s ease-in-out infinite;
+        }
+        
+        .blob1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(245, 193, 14, 0.4);
+            top: 20%;
+            left: 20%;
+        }
+        
+        .blob2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(139, 92, 246, 0.3);
+            top: 60%;
+            right: 20%;
+            animation-delay: -2s;
+        }
+        
+        .blob3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(59, 130, 246, 0.2);
+            top: 40%;
+            left: 60%;
+            animation-delay: -4s;
+        }
+        
+        /* Animations */
+        @keyframes pulse { to { transform: scale(1.5); opacity: 0.7; } }
+        @keyframes dataFlow { 
+            0% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0; transform: scaleX(1); }
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-20px); }
+        }
+        @keyframes waveMove {
+            0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.3; }
+            50% { transform: translateY(-10px) scaleY(1.5); opacity: 0.8; }
+        }
+        @keyframes twinkle { to { opacity: 0.3; transform: scale(0.8); } }
+        @keyframes matrixFall {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        @keyframes morphing {
+            0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+            25% { transform: translateX(50px) translateY(-30px) scale(1.2); }
+            50% { transform: translateX(-30px) translateY(20px) scale(0.8); }
+            75% { transform: translateX(20px) translateY(-10px) scale(1.1); }
+        }
+        
+        /* Mouse Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(245, 193, 14, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Concept 1: Neural Network -->
+    <div class="concept neural-network" id="concept1">
+        <div class="concept-title">
+            <h2>1. Neural Network</h2>
+            <p>AI-inspired connected nodes</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Dinamik bağlantı ağı<br>
+            • Mouse'a göre node aktivasyonu<br>
+            • Veri akışı animasyonu<br>
+            • Teknoloji hissi veren tasarım
+        </div>
+    </div>
+
+    <!-- Concept 2: Geometric Particles -->
+    <div class="concept geometric" id="concept2">
+        <div class="concept-title">
+            <h2>2. Geometric Particles</h2>
+            <p>Modern minimalist şekiller</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Farklı geometrik şekiller<br>
+            • Mouse ile repulsion/attraction<br>
+            • Smooth rotation animasyonları<br>
+            • Minimalist ve modern görünüm
+        </div>
+    </div>
+
+    <!-- Concept 3: Wave Field -->
+    <div class="concept wave-field" id="concept3">
+        <div class="concept-title">
+            <h2>3. Wave Field</h2>
+            <p>Ses dalgası benzeri efekt</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Horizontal dalga çizgileri<br>
+            • Mouse pozisyonuna göre amplitüd<br>
+            • Ses visualizer görünümü<br>
+            • Dinamik ve ritimsel hareket
+        </div>
+    </div>
+
+    <!-- Concept 4: Constellation -->
+    <div class="concept constellation" id="concept4">
+        <div class="concept-title">
+            <h2>4. Constellation</h2>
+            <p>Yıldız haritası efekti</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Yıldızlar arası bağlantılar<br>
+            • Mouse ile yıldız parlaklığı<br>
+            • Takımyıldız oluşturma<br>
+            • Gece gökyüzü hissi
+        </div>
+    </div>
+
+    <!-- Concept 5: Matrix Rain -->
+    <div class="concept matrix" id="concept5">
+        <div class="concept-title">
+            <h2>5. Matrix Code Rain</h2>
+            <p>Matrix film etkisi</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Düşen kod yağmuru<br>
+            • Mouse ile yağmur hızı<br>
+            • Cyberpunk atmosfer<br>
+            • Retro-futuristic görünüm
+        </div>
+    </div>
+
+    <!-- Concept 6: Fluid Morphing -->
+    <div class="concept fluid" id="concept6">
+        <div class="concept-title">
+            <h2>6. Fluid Morphing Blobs</h2>
+            <p>Organik sıvı efektler</p>
+        </div>
+        <div class="concept-description">
+            <strong>Özellikler:</strong><br>
+            • Yumuşak morphing efektler<br>
+            • Mouse ile blob çekimi<br>
+            • Organik ve akışkan hareket<br>
+            • Modern gradient görünümü
+        </div>
+    </div>
+
+    <script>
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        // Generate Neural Network
+        function createNeuralNetwork() {
+            const container = document.getElementById('concept1');
+            const nodeCount = 20;
+            const nodes = [];
+            
+            for (let i = 0; i < nodeCount; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(node);
+                nodes.push(node);
+            }
+            
+            // Create connections
+            for (let i = 0; i < nodeCount; i++) {
+                if (Math.random() > 0.7) {
+                    const connection = document.createElement('div');
+                    connection.className = 'connection';
+                    const targetIndex = Math.floor(Math.random() * nodeCount);
+                    if (targetIndex !== i) {
+                        const sourceRect = nodes[i].getBoundingClientRect();
+                        const targetRect = nodes[targetIndex].getBoundingClientRect();
+                        const distance = Math.sqrt(
+                            Math.pow(targetRect.left - sourceRect.left, 2) + 
+                            Math.pow(targetRect.top - sourceRect.top, 2)
+                        );
+                        connection.style.width = distance + 'px';
+                        connection.style.left = nodes[i].style.left;
+                        connection.style.top = nodes[i].style.top;
+                        const angle = Math.atan2(
+                            targetRect.top - sourceRect.top,
+                            targetRect.left - sourceRect.left
+                        ) * 180 / Math.PI;
+                        connection.style.transform = `rotate(${angle}deg)`;
+                        container.appendChild(connection);
+                    }
+                }
+            }
+        }
+
+        // Generate Geometric Particles
+        function createGeometricParticles() {
+            const container = document.getElementById('concept2');
+            const shapes = ['square', 'triangle', 'diamond', 'hexagon'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                const shapeClass = shapes[Math.floor(Math.random() * shapes.length)];
+                particle.className = `geo-particle ${shapeClass}`;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Generate Wave Field
+        function createWaveField() {
+            const container = document.getElementById('concept3');
+            
+            for (let i = 0; i < 15; i++) {
+                const wave = document.createElement('div');
+                wave.className = 'wave-line';
+                wave.style.top = (i * 7 + 10) + '%';
+                wave.style.animationDelay = (i * 0.2) + 's';
+                container.appendChild(wave);
+            }
+        }
+
+        // Generate Constellation
+        function createConstellation() {
+            const container = document.getElementById('concept4');
+            const stars = [];
+            
+            for (let i = 0; i < 25; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+                stars.push(star);
+            }
+            
+            // Create constellation lines
+            for (let i = 0; i < stars.length; i++) {
+                if (Math.random() > 0.8) {
+                    const line = document.createElement('div');
+                    line.className = 'constellation-line';
+                    const targetIndex = Math.floor(Math.random() * stars.length);
+                    if (targetIndex !== i) {
+                        line.style.left = stars[i].style.left;
+                        line.style.top = stars[i].style.top;
+                        line.style.width = Math.random() * 200 + 50 + 'px';
+                        line.style.transform = `rotate(${Math.random() * 360}deg)`;
+                        container.appendChild(line);
+                    }
+                }
+            }
+        }
+
+        // Generate Matrix Rain
+        function createMatrixRain() {
+            const container = document.getElementById('concept5');
+            
+            for (let i = 0; i < 30; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = (i * 3.33) + '%';
+                column.style.animationDelay = Math.random() * 4 + 's';
+                column.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(column);
+            }
+        }
+
+        // Initialize all concepts
+        setTimeout(() => {
+            createNeuralNetwork();
+            createGeometricParticles();
+            createWaveField();
+            createConstellation();
+            createMatrixRain();
+        }, 500);
+
+        // Mouse interaction for each concept
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            // Update CSS variables for mouse position
+            document.documentElement.style.setProperty('--mouse-x', mouseX);
+            document.documentElement.style.setProperty('--mouse-y', mouseY);
+        });
+    </script>
+</body>
+</html>

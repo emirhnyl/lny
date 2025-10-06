@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.scroll-snap-container {
+  scroll-behavior: smooth;
+}
+
+/* Ana scroll container */
+.smooth-scroll-container,
+.scroll-snap-container {
+  scroll-behavior: smooth;
+}
+
+/* Hero section - scroll snap start */
+section[data-hero-section] {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+/* Services section - scroll snap start */
+section[data-section="services"], 
+.scroll-section[data-section="services"] {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .smooth-scroll,
+  .smooth-scroll-container {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-heading {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.custom-cursor * {
+  cursor: none !important;
+}
+
+@media (pointer: coarse) {
+  .custom-cursor,
+  .custom-cursor * {
+    cursor: auto !important;
+  }
+}
+
+/* 3D Viewer scroll prevention */
+.viewer-active {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+.viewer-canvas {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.viewer-canvas:focus {
+  outline: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(17, 17, 17, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 193, 14, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 193, 14, 0.5);
+}
+
+/* Admin panel scrollbar */
+.admin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(209, 213, 219);
+  border-radius: 4px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156, 163, 175);
+}
+
+.dark .admin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(75, 85, 99);
+}
+
+.dark .admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(107, 114, 128);
+}
+
+/* Firefox scrollbar */
+.admin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(209, 213, 219) transparent;
+}
+
+.dark .admin-scrollbar {
+  scrollbar-color: rgb(75, 85, 99) transparent;
+}
+
+/* Pulse animation for mouse effects */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+}
+
+/* Float animation for background elements */
+@keyframes float {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 0%;
+  }
+  33% {
+    background-position: 100% 50%, 0% 50%, 80% 80%;
+  }
+  66% {
+    background-position: 50% 100%, 50% 0%, 20% 50%;
+  }
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-dark-200;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Selection colors */
+::selection {
+  @apply bg-primary/20 text-dark;
+}
+
+/* Focus styles */
+.focus-visible:focus {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-white dark:ring-offset-dark outline-none;
+}
+
+/* Glass effect */
+.glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #F5C10E, #E0AD0A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Lightning glow */
+.lightning-glow {
+  filter: drop-shadow(0 0 8px #F5C10E) drop-shadow(0 0 16px #F5C10E40);
+}
+
+/* Smooth transforms for performance */
+.smooth-transform {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Three.js canvas */
+canvas {
+  display: block;
+  outline: none;
+}
+
+/* Magnetic button hover effect */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.magnetic:hover {
+  transform: scale(1.05);
+}
+
+/* Tilt card effect */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease-out;
+}
+
+/* Noise texture overlay */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* Page transition animations */
+.page-transition {
+  animation: pageEnter 0.3s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Interactive hero background */
+.hero-interactive {
+  cursor: none;
+}
+
+.hero-interactive .custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  background: rgba(245, 193, 14, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+}
+
+/* Loading state */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #F5C10E;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
