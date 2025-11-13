@@ -1,6 +1,7 @@
 import { ScrollSection } from '@/components/common/scroll-section'
 // import { LogoMark } from '@/components/hero/logo-mark' // Artık kullanılmıyor
 import HolographicBackground from '@/components/backgrounds/holographic-background'
+import { Lightbulb, Users, Zap, Target, Award, TrendingUp } from 'lucide-react'
 
 export const metadata = {
   title: "Hakkımızda - LnY",
@@ -105,35 +106,104 @@ export default function AboutPage() {
             <h2 className="font-heading text-4xl md:text-5xl font-bold text-center mb-16">
               Değerlerimiz
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-8">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-3xl">🚀</span>
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {/* İnovasyon */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <Lightbulb className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    İnovasyon
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Sürekli öğrenme ve gelişimle teknolojinin sınırlarını zorluyoruz
+                  </p>
                 </div>
-                <h3 className="font-heading font-semibold text-xl mb-4">İnovasyon</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Sürekli öğrenme ve gelişimle teknolojinin sınırlarını zorluyoruz
-                </p>
               </div>
               
-              <div className="text-center p-8">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-3xl">🤝</span>
+              {/* İşbirliği */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <Users className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    İşbirliği
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Müşterilerimizle güçlü ortaklıklar kurarak ortak başarı sağlıyoruz
+                  </p>
                 </div>
-                <h3 className="font-heading font-semibold text-xl mb-4">İşbirliği</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Müşterilerimizle güçlü ortaklıklar kurarak ortak başarı sağlıyoruz
-                </p>
               </div>
               
-              <div className="text-center p-8">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-3xl">⚡</span>
+              {/* Hızlı Çözüm */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <Zap className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    Hızlı Çözüm
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Etkin metodlarla hızlı ve kaliteli çözümler üretiyoruz
+                  </p>
                 </div>
-                <h3 className="font-heading font-semibold text-xl mb-4">Hızlı Çözüm</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Etkin metodlarla hızlı ve kaliteli çözümler üretiyoruz
-                </p>
+              </div>
+            </div>
+            
+            {/* Additional Values Row */}
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-8">
+              {/* Kalite */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <Award className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    Kalite & Mükemmellik
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    En yüksek standartlarda çözümler sunarak fark yaratıyoruz
+                  </p>
+                </div>
+              </div>
+              
+              {/* Hedef Odaklılık */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <Target className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    Hedef Odaklılık
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Müşteri hedeflerini kendi hedeflerimiz olarak benimsiyoruz
+                  </p>
+                </div>
+              </div>
+              
+              {/* Sürdürülebilir Büyüme */}
+              <div className="group relative bg-white dark:bg-dark-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <TrendingUp className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-4 text-center text-gray-900 dark:text-white">
+                    Sürdürülebilir Büyüme
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Logaritmik büyüme felsefesiyle uzun vadeli değer yaratıyoruz
+                  </p>
+                </div>
               </div>
             </div>
           </div>
