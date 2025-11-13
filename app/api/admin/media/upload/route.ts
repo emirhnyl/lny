@@ -68,6 +68,22 @@ export async function POST(request: Request) {
       uploadedFiles.push(media)
     }
 
+    // Auto-restart PM2 in production to serve new static files
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const { exec } = require('child_process')
+        exec('pm2 restart lny-website', (error: any) => {
+          if (error) {
+            console.error('PM2 restart error:', error)
+          } else {
+            console.log('PM2 restarted successfully after file upload')
+          }
+        })
+      } catch (error) {
+        console.error('PM2 restart failed:', error)
+      }
+    }
+
     return NextResponse.json({ files: uploadedFiles })
   } catch (error) {
     console.error(error)

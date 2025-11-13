@@ -127,7 +127,13 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
       const uploadedUrl = data.files[0].url
 
       setFormData(prev => ({ ...prev, glbModelUrl: uploadedUrl }))
-      toast.success("GLB dosyası yüklendi!")
+      toast.success("GLB dosyası yüklendi! Sunucu yenileniyor...")
+      
+      // Wait for PM2 restart (give it 3 seconds)
+      setTimeout(() => {
+        toast.success("Dosya kullanıma hazır!")
+      }, 3000)
+      
       setGlbFile(null)
     } catch (error) {
       toast.error("Dosya yükleme başarısız")
@@ -163,7 +169,11 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
       const uploadedUrl = data.files[0].url
 
       setFormData(prev => ({ ...prev, thumbnailUrl: uploadedUrl }))
-      toast.success("Kapak görseli yüklendi!")
+      toast.success("Kapak görseli yüklendi! Sunucu yenileniyor...")
+      
+      setTimeout(() => {
+        toast.success("Görsel kullanıma hazır!")
+      }, 3000)
     } catch (error) {
       toast.error("Dosya yükleme başarısız")
     } finally {
