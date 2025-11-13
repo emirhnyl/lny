@@ -23,18 +23,38 @@ async function main() {
   
   console.log('✅ Super Admin created:', admin.email)
 
-  // Örnek blog kategorisi
-  const category = await prisma.blogCategory.upsert({
-    where: { slug: 'teknoloji' },
-    update: {},
-    create: {
+  // Blog kategorileri
+  const categories = [
+    {
       name: 'Teknoloji',
       slug: 'teknoloji',
       description: 'Teknoloji ve yenilik haberleri',
     },
-  })
+    {
+      name: 'Mühendislik',
+      slug: 'muhendislik',
+      description: 'Mühendislik projeleri ve çözümleri',
+    },
+    {
+      name: 'Yazılım',
+      slug: 'yazilim',
+      description: 'Yazılım geliştirme ve teknolojileri',
+    },
+    {
+      name: 'Tasarım',
+      slug: 'tasarim',
+      description: '3D tasarım ve modelleme',
+    },
+  ]
 
-  console.log('✅ Blog category created:', category.name)
+  for (const cat of categories) {
+    const category = await prisma.blogCategory.upsert({
+      where: { slug: cat.slug },
+      update: {},
+      create: cat,
+    })
+    console.log('✅ Blog category created:', category.name)
+  }
 
   // Örnek hizmetler
   const services = [
