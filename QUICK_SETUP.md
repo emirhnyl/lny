@@ -14,7 +14,7 @@ Eklenecek secrets:
 ```
 SSH_HOST=72.60.180.1
 SSH_USER=root
-SSH_PASSWORD=sizin-ssh-sifreniz
+SSH_PASSWORD=Emir0102031213.
 SSH_PORT=22
 DEPLOY_PATH=/root/lny-website
 
