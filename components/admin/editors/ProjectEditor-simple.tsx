@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Save } from "lucide-react"
+import { Save, Upload, X, FileVideo } from "lucide-react"
 
 interface ProjectEditorProps {
   project?: any
@@ -12,6 +12,8 @@ interface ProjectEditorProps {
 export default function ProjectEditor({ project }: ProjectEditorProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [glbFile, setGlbFile] = useState<File | null>(null)
 
   const [formData, setFormData] = useState({
     title: project?.title || "",
@@ -82,6 +84,91 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
       .replace(/^-+|-+$/g, "")
     
     setFormData({ ...formData, slug })
+  }
+
+  const handleGlbUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.name.endsWith('.glb')) {
+      toast.error("Sadece .glb dosyaları yüklenebilir")
+      return
+    }
+
+    // Validate file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (file.size > maxSize) {
+      toast.error("Dosya boyutu 50MB'dan küçük olmalıdır")
+      return
+    }
+
+    setGlbFile(file)
+    toast.success("Dosya seçildi: " + file.name)
+  }
+
+  const uploadGlbFile = async () => {
+    if (!glbFile) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append("files", glbFile)
+      formData.append("folder", "projects")
+
+      const res = await fetch("/api/admin/media/upload", {
+        method: "POST",
+        body: formData
+      })
+
+      if (!res.ok) throw new Error("Upload failed")
+
+      const data = await res.json()
+      const uploadedUrl = data.files[0].url
+
+      setFormData(prev => ({ ...prev, glbModelUrl: uploadedUrl }))
+      toast.success("GLB dosyası yüklendi!")
+      setGlbFile(null)
+    } catch (error) {
+      toast.error("Dosya yükleme başarısız")
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error("Sadece resim dosyaları yüklenebilir")
+      return
+    }
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append("files", file)
+      formData.append("folder", "projects")
+
+      const res = await fetch("/api/admin/media/upload", {
+        method: "POST",
+        body: formData
+      })
+
+      if (!res.ok) throw new Error("Upload failed")
+
+      const data = await res.json()
+      const uploadedUrl = data.files[0].url
+
+      setFormData(prev => ({ ...prev, thumbnailUrl: uploadedUrl }))
+      toast.success("Kapak görseli yüklendi!")
+    } catch (error) {
+      toast.error("Dosya yükleme başarısız")
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -200,42 +287,122 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
         </div>
 
         {/* Media */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="space-y-4 mb-4">
+          {/* 3D Model Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              3D Model URL (.glb)
+              3D Model (.glb)
             </label>
-            <input
-              type="text"
-              value={formData.glbModelUrl}
-              onChange={(e) => setFormData({ ...formData, glbModelUrl: e.target.value })}
-              placeholder="/models/project.glb"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* File Upload */}
+              <div>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept=".glb"
+                    onChange={handleGlbUpload}
+                    className="hidden"
+                    id="glb-upload"
+                  />
+                  <label
+                    htmlFor="glb-upload"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary cursor-pointer transition-colors bg-gray-50 dark:bg-gray-700/50"
+                  >
+                    <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {glbFile ? glbFile.name : "GLB Dosyası Seç"}
+                    </span>
+                  </label>
+                </div>
+                {glbFile && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={uploadGlbFile}
+                      disabled={uploading}
+                      className="flex-1 px-3 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <FileVideo className="w-4 h-4" />
+                      {uploading ? "Yükleniyor..." : "Yükle"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGlbFile(null)}
+                      className="px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Max 50MB
+                </p>
+              </div>
+              
+              {/* Manual URL Input */}
+              <div>
+                <input
+                  type="text"
+                  value={formData.glbModelUrl}
+                  onChange={(e) => setFormData({ ...formData, glbModelUrl: e.target.value })}
+                  placeholder="veya manuel URL: /models/project.glb"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                />
+                {formData.glbModelUrl && (
+                  <p className="mt-1 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                    ✓ Model URL kaydedildi
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Kapak Görseli URL
-            </label>
-            <input
-              type="text"
-              value={formData.thumbnailUrl}
-              onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-              placeholder="/images/project-thumb.jpg"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Galeri Görselleri (virgülle ayırın)
-            </label>
-            <input
-              type="text"
-              value={formData.images}
-              onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-              placeholder="/img1.jpg, /img2.jpg"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
-            />
+
+          {/* Thumbnail Upload */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Kapak Görseli
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailUpload}
+                  className="hidden"
+                  id="thumbnail-upload"
+                />
+                <label
+                  htmlFor="thumbnail-upload"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary cursor-pointer transition-colors bg-gray-50 dark:bg-gray-700/50"
+                >
+                  <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {uploading ? "Yükleniyor..." : "Görsel Yükle"}
+                  </span>
+                </label>
+              </div>
+              <input
+                type="text"
+                value={formData.thumbnailUrl}
+                onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                placeholder="veya manuel URL"
+                className="mt-2 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            
+            {/* Gallery Images */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Galeri Görselleri (virgülle ayırın)
+              </label>
+              <textarea
+                value={formData.images}
+                onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                placeholder="/img1.jpg, /img2.jpg"
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white resize-none"
+              />
+            </div>
           </div>
         </div>
 

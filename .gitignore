@@ -53,3 +53,9 @@ logs
 *.log
 
 /generated/prisma
+
+# Uploads (user generated content)
+public/models/uploads/*
+public/images/uploads/*
+!public/models/uploads/.gitkeep
+!public/images/uploads/.gitkeep
