@@ -22,6 +22,11 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+
+          # Load NVM and Node.js
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        
           cd ${{ secrets.DEPLOY_PATH }}
           echo "📥 Pulling latest code..."
           git pull origin main
