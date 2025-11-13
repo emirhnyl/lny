@@ -181,6 +181,55 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
     }
   }
 
+  // Handle multiple gallery images upload
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    // Validate all files are images
+    const invalidFiles = Array.from(files).filter(file => !file.type.startsWith('image/'))
+    if (invalidFiles.length > 0) {
+      toast.error("Sadece resim dosyaları yüklenebilir")
+      return
+    }
+
+    setUploading(true)
+    toast.info(`${files.length} görsel yükleniyor...`)
+    
+    try {
+      const uploadFormData = new FormData()
+      Array.from(files).forEach(file => {
+        uploadFormData.append("files", file)
+      })
+      uploadFormData.append("folder", "projects")
+
+      const res = await fetch("/api/admin/media/upload", {
+        method: "POST",
+        body: uploadFormData
+      })
+
+      if (!res.ok) throw new Error("Upload failed")
+
+      const data = await res.json()
+      const uploadedUrls = data.files.map((f: any) => f.url)
+
+      // Append to existing images or create new list
+      const currentImages = formData.images ? formData.images.split(',').map((s: string) => s.trim()).filter(Boolean) : []
+      const newImages = [...currentImages, ...uploadedUrls]
+      
+      setFormData(prev => ({ ...prev, images: newImages.join(', ') }))
+      toast.success(`${uploadedUrls.length} görsel yüklendi! Sunucu yenileniyor...`)
+      
+      setTimeout(() => {
+        toast.success("Görseller kullanıma hazır!")
+      }, 3000)
+    } catch (error) {
+      toast.error("Dosya yükleme başarısız")
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -367,11 +416,37 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
             </div>
           </div>
 
+          {/* Image Size Info Card */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-1">
+                  📐 Görsel Boyutu Önerileri
+                </h4>
+                <ul className="text-xs text-blue-800 dark:text-blue-300 space-y-1">
+                  <li>• <strong>En iyi görünüm:</strong> 1920x1080 piksel (Full HD)</li>
+                  <li>• <strong>Oran:</strong> 16:9 (örn: 1280x720, 1920x1080, 2560x1440)</li>
+                  <li>• <strong>Format:</strong> JPG, PNG veya WebP</li>
+                  <li>• <strong>Maksimum boyut:</strong> 5 MB (hızlı yükleme için)</li>
+                  <li className="text-blue-600 dark:text-blue-400 font-medium">💡 Farklı boyuttaki görseller otomatik olarak sığdırılır</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           {/* Thumbnail Upload */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Kapak Görseli
+                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                  (Önerilen: 1920x1080px veya 16:9 oran)
+                </span>
               </label>
               <div className="relative">
                 <input
@@ -403,8 +478,33 @@ export default function ProjectEditor({ project }: ProjectEditorProps) {
             {/* Gallery Images */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Galeri Görselleri (virgülle ayırın)
+                Galeri Görselleri
+                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                  (Önerilen: 1920x1080px, virgülle ayırın)
+                </span>
               </label>
+              
+              {/* Multiple Image Upload Button */}
+              <div className="relative mb-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryUpload}
+                  className="hidden"
+                  id="gallery-upload"
+                />
+                <label
+                  htmlFor="gallery-upload"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary cursor-pointer transition-colors bg-gray-50 dark:bg-gray-700/50"
+                >
+                  <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {uploading ? "Yükleniyor..." : "Çoklu Görsel Yükle"}
+                  </span>
+                </label>
+              </div>
+              
               <textarea
                 value={formData.images}
                 onChange={(e) => setFormData({ ...formData, images: e.target.value })}

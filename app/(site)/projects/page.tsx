@@ -6,7 +6,7 @@ import ProjectsClient from './projects-client'
 
 export const metadata = {
   title: "Projelerimiz - LnY",
-  description: "LnY'nin gerçekleştirdiği AR-GE, mekanik tasarım ve yazılım geliştirme projeleri. İnteraktif 3D modellerle projelerimizi keşfedin."
+  description: "LnY'nin gerçekleştirdiği AR-GE, mekanik tasarım ve yazılım geliştirme projeleri. Görsel galerilerle projelerimizi keşfedin."
 }
 
 // Revalidate every 60 seconds
@@ -52,6 +52,7 @@ export default async function ProjectsPage() {
     status: 'completed' as const,
     technologies: project.tags ? project.tags.split(',').map((tag: string) => tag.trim()) : [],
     glbUrl: project.glbModelUrl || undefined,
+    thumbnailUrl: project.thumbnailUrl || undefined,
     images: project.images ? project.images.split(',').map((img: string) => img.trim()) : undefined
   }))
 
@@ -66,21 +67,21 @@ export default async function ProjectsPage() {
                 Projelerimiz
               </h1>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                Projelerimizi interaktif 3D modeller üzerinden keşfederek, 
+                Gerçekleştirdiğimiz projeleri görsellerle keşfederek, 
                 her çalışmanın teknik detaylarını ve mühendislik yaklaşımını inceleyebilirsiniz.
               </p>
               <div className="flex items-center justify-center gap-4 text-gray-400 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span>3D Model ile Görüntüleme</span>
+                  <span>Görsel Galeri</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span>İnteraktif Kontroller</span>
+                  <span>Detaylı Açıklamalar</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span>Tam Ekran Görüntüleme</span>
+                  <span>Teknik Dokümantasyon</span>
                 </div>
               </div>
             </div>
@@ -98,7 +99,7 @@ export default async function ProjectsPage() {
                 Bir Sonraki Proje Sizinki Olsun
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-400 mb-12">
-                Projelerimizi inceleyip 3D modellerle tanıştınız. Şimdi sizin projenizi hayata geçirelim!
+                Projelerimizi inceleyip teknik detayları öğrendiniz. Şimdi sizin projenizi hayata geçirelim!
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

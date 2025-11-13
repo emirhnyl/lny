@@ -10,7 +10,8 @@ export interface Project {
   status: 'completed' | 'in-progress' | 'planned'
   technologies: string[]
   glbUrl?: string // 3D model dosyası
-  images?: string[]
+  thumbnailUrl?: string // Ön izleme görseli
+  images?: string[] // Galeri görselleri
   details?: {
     problem: string
     solution: string

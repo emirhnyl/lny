@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ScrollSection } from '@/components/common/scroll-section'
 import { MagneticButton } from '@/components/common/magnetic-button'
-import SimpleGLBViewer from '@/app/components/SimpleGLBViewer'
+import { ImageCarousel } from '@/components/common/image-carousel'
 import { Project } from '@/app/data/projects'
 
 interface ProjectsClientProps {
@@ -90,20 +90,26 @@ export default function ProjectsClient({ projectsData }: ProjectsClientProps) {
       <ScrollSection className="py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
-              <div
-                key={project.id}
-                className="group rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white dark:bg-dark-50 border border-gray-200 dark:border-gray-700"
-              >
-                {/* 3D Model Viewer */}
-                <div className="aspect-video">
-                  <SimpleGLBViewer
-                    glbUrl={project.glbUrl || '/models/projects/test-cube.glb'}
-                    className="w-full h-full rounded-t-2xl"
+            {filteredProjects.map((project) => {
+              // Prepare images array: thumbnail first, then gallery images
+              const projectImages = [
+                project.thumbnailUrl,
+                ...(project.images || [])
+              ].filter(Boolean) as string[]
+
+              return (
+                <div
+                  key={project.id}
+                  className="group rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white dark:bg-dark-50 border border-gray-200 dark:border-gray-700"
+                >
+                  {/* Image Carousel */}
+                  <ImageCarousel
+                    images={projectImages}
+                    alt={project.title}
+                    className="w-full"
                   />
-                </div>
-                
-                <div className="p-6">
+                  
+                  <div className="p-6">
                   {/* Status and Category */}
                   <div className="flex items-center justify-between mb-3">
                     <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
@@ -165,8 +171,9 @@ export default function ProjectsClient({ projectsData }: ProjectsClientProps) {
                     </MagneticButton>
                   </div>
                 </div>
-              </div>
-            ))}
+                </div>
+              )
+            })}
           </div>
 
           {/* No Results */}
