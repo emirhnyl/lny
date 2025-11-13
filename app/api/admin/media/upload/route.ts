@@ -4,6 +4,16 @@ import { authOptions } from "@/lib/auth"
 import { writeFile } from "fs/promises"
 import { join } from "path"
 import { prisma } from "@/lib/prisma"
+import { mkdir } from "fs/promises"
+
+// Increase body size limit for file uploads
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+}
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +49,10 @@ export async function POST(request: Request) {
       if (folder) {
         uploadPath = `${uploadPath}/${folder}`
       }
+
+      // Ensure directory exists
+      const dirPath = join(process.cwd(), uploadPath)
+      await mkdir(dirPath, { recursive: true })
 
       const path = join(process.cwd(), uploadPath, filename)
       await writeFile(path, buffer)
