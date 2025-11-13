@@ -18,12 +18,6 @@ const nextConfig = {
   },
   // MDX support
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  // API Route Body Size Limit - 50MB for GLB files
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
 }
 
 module.exports = nextConfig

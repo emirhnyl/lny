@@ -6,14 +6,9 @@ import { join } from "path"
 import { prisma } from "@/lib/prisma"
 import { mkdir } from "fs/promises"
 
-// Increase body size limit for file uploads
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
-}
+// Configure route for large file uploads
+export const maxDuration = 60 // 60 seconds timeout
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   try {
