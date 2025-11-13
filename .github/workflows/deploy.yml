@@ -26,15 +26,15 @@ jobs:
     - name: Build project
       run: npm run build
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: ${{ vars.DATABASE_URL }}
         NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-        NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-        SMTP_HOST: ${{ secrets.SMTP_HOST }}
-        SMTP_PORT: ${{ secrets.SMTP_PORT }}
-        SMTP_USER: ${{ secrets.SMTP_USER }}
-        SMTP_PASS: ${{ secrets.SMTP_PASS }}
-        MAIL_TO: ${{ secrets.MAIL_TO }}
+        NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
+        NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        SMTP_HOST: ${{ vars.SMTP_HOST }}
+        SMTP_PORT: ${{ vars.SMTP_PORT }}
+        SMTP_USER: ${{ vars.SMTP_USER }}
+        SMTP_PASS: ${{ vars.SMTP_PASS }}
+        MAIL_TO: ${{ vars.MAIL_TO }}
     
     - name: Deploy to Hostinger via SSH
       uses: appleboy/ssh-action@master
