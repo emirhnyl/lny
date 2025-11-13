@@ -290,3 +290,4 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 ---
 
 **LnY** - Logaritmik Büyüme ve Yenilik © 2024
+✅ Deployment başarılı - Thu Nov 13 17:33:53 +03 2025
