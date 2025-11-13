@@ -1,0 +1,51 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5C10E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0AD0A;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <fegaussianblur stdDeviation="4" result="coloredBlur"/>
+      <femerge> 
+        <femergenode in="coloredBlur"/>
+        <femergenode in="SourceGraphic"/>
+      </femerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#111111" stroke="url(#logoGradient)" stroke-width="3"/>
+  
+  <!-- ln(y) curve -->
+  <path d="M30 140 Q60 80 90 70 Q120 65 150 70" 
+        stroke="url(#logoGradient)" 
+        stroke-width="4" 
+        fill="none" 
+        stroke-linecap="round"/>
+  
+  <!-- Axes -->
+  <line x1="30" y1="140" x2="150" y2="140" stroke="#F5C10E" stroke-width="2"/>
+  <line x1="30" y1="140" x2="30" y2="50" stroke="#F5C10E" stroke-width="2"/>
+  
+  <!-- Lightning bolt -->
+  <g filter="url(#glow)">
+    <path d="M120 30 L110 60 L125 60 L115 90 L130 60 L118 60 Z" 
+          fill="#F5C10E" 
+          stroke="#E0AD0A" 
+          stroke-width="1"/>
+  </g>
+  
+  <!-- Growth points -->
+  <circle cx="45" cy="120" r="3" fill="#F5C10E"/>
+  <circle cx="60" cy="105" r="3" fill="#F5C10E"/>
+  <circle cx="75" cy="90" r="3" fill="#F5C10E"/>
+  <circle cx="90" cy="85" r="3" fill="#F5C10E"/>
+  <circle cx="105" cy="82" r="3" fill="#F5C10E"/>
+  
+  <!-- Labels -->
+  <text x="25" y="45" font-family="'Montserrat', sans-serif" font-size="16" font-weight="600" fill="#F5C10E">y</text>
+  <text x="135" y="155" font-family="'Montserrat', sans-serif" font-size="14" font-weight="600" fill="#F5C10E">ln(x)</text>
+  
+  <!-- LnY Text -->
+  <text x="100" y="180" font-family="'Montserrat', sans-serif" font-size="24" font-weight="800" fill="url(#logoGradient)" text-anchor="middle">LnY</text>
+</svg>

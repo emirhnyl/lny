@@ -1,0 +1,61 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # main branch'e push olduğunda çalışır
+      - master  # veya master branch kullanıyorsanız
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+    
+    - name: Build project
+      run: npm run build
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+        NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        SMTP_HOST: ${{ secrets.SMTP_HOST }}
+        SMTP_PORT: ${{ secrets.SMTP_PORT }}
+        SMTP_USER: ${{ secrets.SMTP_USER }}
+        SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        MAIL_TO: ${{ secrets.MAIL_TO }}
+    
+    - name: Deploy to Hostinger via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          git pull origin main
+          npm ci --legacy-peer-deps
+          npm run build
+          npx prisma generate
+          npx prisma db push
+          pm2 restart lny-website || pm2 start npm --name "lny-website" -- start
+          
+    - name: Deployment notification
+      if: success()
+      run: echo "🚀 Deployment successful!"
+      
+    - name: Deployment failed notification
+      if: failure()
+      run: echo "❌ Deployment failed!"

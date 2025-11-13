@@ -1,0 +1,21 @@
+{
+  "name": "lny-site",
+  "short_name": "LnY",
+  "description": "Logaritmik büyüme ve yenilik odaklı AR-GE, mekanik tasarım ve yazılım otomasyon hizmetleri",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#F5C10E",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

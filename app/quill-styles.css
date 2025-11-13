@@ -1,0 +1,35 @@
+/* React Quill Styles */
+@import 'react-quill/dist/quill.snow.css';
+
+/* Dark mode overrides */
+.dark .ql-toolbar {
+  background: rgb(55 65 81);
+  border-color: rgb(75 85 99);
+}
+
+.dark .ql-container {
+  background: rgb(55 65 81);
+  border-color: rgb(75 85 99);
+  color: white;
+}
+
+.dark .ql-editor {
+  color: white;
+}
+
+.dark .ql-stroke {
+  stroke: rgb(209 213 219);
+}
+
+.dark .ql-fill {
+  fill: rgb(209 213 219);
+}
+
+.dark .ql-picker-label {
+  color: rgb(209 213 219);
+}
+
+.dark .ql-picker-options {
+  background: rgb(55 65 81);
+  border-color: rgb(75 85 99);
+}
