@@ -1,12 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { 
   LayoutDashboard, 
   FileText, 
-  Image, 
+  Image as ImageIcon, 
   Palette, 
   Search, 
   Mail, 
@@ -39,7 +40,7 @@ const menuItems = [
   },
   {
     title: "Medya",
-    icon: Image,
+    icon: ImageIcon,
     href: "/media",
     roles: ["SUPER_ADMIN", "ADMIN", "EDITOR", "AUTHOR"]
   },
@@ -163,17 +164,21 @@ export default function AdminSidebar({ user }: { user: any }) {
       {/* User Info */}
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-            <span className="text-primary font-semibold text-sm">
-              {user.name?.charAt(0) || user.email?.charAt(0)}
-            </span>
+          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden">
+            <Image 
+              src="/logo.svg" 
+              alt="LN-ArGe Logo" 
+              width={32} 
+              height={32}
+              className="w-8 h-8 object-contain"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-              {user.name || 'Admin'}
+              LN-ArGe
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-              {user.role}
+              Mühendislik Ekibi
             </p>
           </div>
         </div>

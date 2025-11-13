@@ -90,6 +90,10 @@ model BlogPost {
   status     PostStatus @default(DRAFT)
   featured   Boolean    @default(false)
   
+  // Author Info (custom fields for blog author display)
+  authorName String?
+  authorBio  String?
+  
   category BlogCategory @relation(fields: [categoryId], references: [id])
   authorId String
   author   User   @relation(fields: [authorId], references: [id])

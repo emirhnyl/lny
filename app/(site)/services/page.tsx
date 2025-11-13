@@ -5,7 +5,7 @@ import HolographicBackground from '@/components/backgrounds/holographic-backgrou
 // Next.js 15 App Router'da metadata kullanıyoruz
 export const metadata = {
   title: 'Hizmetler - LnY',
-  description: 'AR-GE Danışmanlığı, Mekanik Tasarım ve Yazılım Otomasyon hizmetlerimiz hakkında detaylı bilgi.',
+  description: 'Tasarım, Analiz, Yazılım ve 3D Baskı & Prototipleme hizmetlerimiz hakkında detaylı bilgi.',
 }
 
 export default function ServicesPage() {
@@ -71,6 +71,28 @@ export default function ServicesPage() {
         'Test, Devreye Alma ve Eğitim',
         'Teknik Dokümantasyon ve Sürekli Destek'
       ]
+    },
+    {
+      id: '3d-printer',
+      title: '3D Baskı & Prototipleme',
+      description: 'Hızlı prototipleme ve küçük seri üretim için profesyonel 3D baskı hizmetleri sunuyoruz.',
+      icon: '',
+      href: '/services#3d-printer',
+      features: [
+        'FDM ve SLA teknolojileri ile yüksek kaliteli 3D baskı',
+        'Hızlı prototip üretimi ve tasarım doğrulama',
+        'Fonksiyonel test parçaları ve son kullanım ürünleri',
+        'Farklı malzeme seçenekleri (PLA, ABS, PETG, Karbon Fiber, Resin)',
+        'Küçük seri üretim ve özel parça imalatı',
+        'Post-processing ve yüzey kalite iyileştirme'
+      ],
+      process: [
+        '3D Model Hazırlama ve Optimizasyon',
+        'Malzeme ve Teknoloji Seçimi',
+        'Baskı Öncesi Simülasyon ve Ayarlamalar',
+        'Profesyonel 3D Baskı Üretimi',
+        'Kalite Kontrol, Finishing ve Teslimat'
+      ]
     }
   ]
 
@@ -85,7 +107,7 @@ export default function ServicesPage() {
                 Hizmetlerimiz
               </h1>
               <p className="text-xl text-gray-300 leading-relaxed">
-                Ana uzmanlık alanlarımızda logaritmik büyüme sağlayacak çözümler sunuyoruz
+                Tasarımdan üretime, yazılımdan analize - mühendislik projeleriniz için eksiksiz çözümler
               </p>
             </div>
           </div>
@@ -94,7 +116,7 @@ export default function ServicesPage() {
         {/* Services Grid */}
         <ScrollSection className="py-20 bg-gradient-to-br from-transparent via-black/10 to-black/30">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
               {services.map((service) => (
                 <ServiceCard
                   key={service.id}

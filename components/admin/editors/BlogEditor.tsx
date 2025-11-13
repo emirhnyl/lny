@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Save } from "lucide-react"
+import { Save, Upload } from "lucide-react"
 
 interface BlogEditorProps {
   post?: any
@@ -13,19 +13,19 @@ interface BlogEditorProps {
 export default function BlogEditor({ post, categories }: BlogEditorProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const [formData, setFormData] = useState({
     title: post?.title || "",
     slug: post?.slug || "",
-    excerpt: post?.excerpt || "",
     content: post?.content || "",
     categoryId: post?.categoryId || categories[0]?.id || "",
     tags: post?.tags || "",
     status: post?.status || "DRAFT",
     featured: post?.featured || false,
-    featuredImage: post?.featuredImage || "",
-    metaTitle: post?.metaTitle || "",
-    metaDescription: post?.metaDescription || ""
+    coverImage: post?.coverImage || "",
+    authorName: post?.authorName || "",
+    authorBio: post?.authorBio || "",
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +42,10 @@ export default function BlogEditor({ post, categories }: BlogEditorProps) {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          publishedAt: formData.status === "PUBLISHED" ? new Date() : null,
+        })
       })
 
       if (!res.ok) throw new Error("Bir hata oluştu")
@@ -58,18 +61,59 @@ export default function BlogEditor({ post, categories }: BlogEditorProps) {
   }
 
   const generateSlug = () => {
+    const turkishMap: { [key: string]: string } = {
+      'ç': 'c', 'ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
+      'Ç': 'c', 'Ğ': 'g', 'Ö': 'o', 'Ş': 's', 'Ü': 'u'
+    }
+    
     const slug = formData.title
+      .split('')
+      .map((char: string) => turkishMap[char] || char)
+      .join('')
       .toLowerCase()
-      .replace(/ğ/g, "g")
-      .replace(/ü/g, "u")
-      .replace(/ş/g, "s")
-      .replace(/ı/g, "i")
-      .replace(/ö/g, "o")
-      .replace(/ç/g, "c")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
     
     setFormData({ ...formData, slug })
+  }
+
+  // Handle cover image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Sadece resim dosyaları yüklenebilir")
+      return
+    }
+
+    setUploading(true)
+    try {
+      const uploadFormData = new FormData()
+      uploadFormData.append("files", file)
+      uploadFormData.append("folder", "blog")
+
+      const res = await fetch("/api/admin/media/upload", {
+        method: "POST",
+        body: uploadFormData
+      })
+
+      if (!res.ok) throw new Error("Upload failed")
+
+      const data = await res.json()
+      const uploadedUrl = data.files[0].url
+
+      setFormData(prev => ({ ...prev, coverImage: uploadedUrl }))
+      toast.success("Kapak görseli yüklendi! Sunucu yenileniyor...")
+      
+      setTimeout(() => {
+        toast.success("Görsel kullanıma hazır!")
+      }, 3000)
+    } catch (error) {
+      toast.error("Dosya yükleme başarısız")
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -114,31 +158,16 @@ export default function BlogEditor({ post, categories }: BlogEditorProps) {
           </div>
         </div>
 
-        {/* Excerpt */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Özet *
-          </label>
-          <textarea
-            required
-            value={formData.excerpt}
-            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-            rows={3}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white resize-none"
-            placeholder="Yazının kısa özeti..."
-          />
-        </div>
-
         {/* Content */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             İçerik *
           </label>
           <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-            {/* Toolbar */}
-            <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600 px-3 py-2 flex gap-1">
+            {/* Toolbar Info */}
+            <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600 px-3 py-2">
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                💡 HTML ve Markdown desteklenir
+                💡 HTML etiketleri desteklenir: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;a&gt;, &lt;img&gt;
               </div>
             </div>
             {/* Textarea */}
@@ -148,16 +177,21 @@ export default function BlogEditor({ post, categories }: BlogEditorProps) {
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               rows={15}
               className="w-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white resize-none font-mono text-sm"
-              placeholder="Blog içeriği... HTML veya Markdown formatında yazabilirsiniz."
+              placeholder="Blog içeriği... HTML formatında yazabilirsiniz.
+
+Örnek:
+<h2>Alt Başlık</h2>
+<p>Paragraf metni burada...</p>
+<ul>
+  <li>Liste öğesi 1</li>
+  <li>Liste öğesi 2</li>
+</ul>"
             />
           </div>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            HTML etiketleri kullanabilirsiniz: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;a&gt;, &lt;img&gt;
-          </p>
         </div>
 
         {/* Category & Tags */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Kategori *
@@ -189,49 +223,84 @@ export default function BlogEditor({ post, categories }: BlogEditorProps) {
           </div>
         </div>
 
-        {/* Featured Image */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Öne Çıkan Görsel URL
-          </label>
-          <input
-            type="text"
-            value={formData.featuredImage}
-            onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-            placeholder="/images/blog/post-image.jpg"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
-          />
+        {/* Author Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Yazar Adı
+              <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                (Ör: Ahmet Yılmaz, LN-ArGe Ekibi)
+              </span>
+            </label>
+            <input
+              type="text"
+              value={formData.authorName}
+              onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
+              placeholder="Yazar adınızı girin"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Yazar Açıklaması
+              <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+                (Ör: Makine Mühendisi, Yazılım Geliştirici)
+              </span>
+            </label>
+            <input
+              type="text"
+              value={formData.authorBio}
+              onChange={(e) => setFormData({ ...formData, authorBio: e.target.value })}
+              placeholder="Kısa açıklama"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+            />
+          </div>
         </div>
 
-        {/* SEO */}
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">SEO Ayarları</h3>
-          <div className="space-y-4">
+        {/* Cover Image Upload */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Kapak Görseli
+            <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+              (Önerilen: 1920x1080px veya 16:9 oran)
+            </span>
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Meta Başlık
-              </label>
               <input
-                type="text"
-                value={formData.metaTitle}
-                onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
-                placeholder="SEO için sayfa başlığı"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="cover-image-upload"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Meta Açıklama
+              <label
+                htmlFor="cover-image-upload"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary cursor-pointer transition-colors bg-gray-50 dark:bg-gray-700/50"
+              >
+                <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {uploading ? "Yükleniyor..." : "Görsel Yükle"}
+                </span>
               </label>
-              <textarea
-                value={formData.metaDescription}
-                onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
-                rows={2}
-                placeholder="SEO için sayfa açıklaması"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white resize-none"
+            </div>
+            <input
+              type="text"
+              value={formData.coverImage}
+              onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+              placeholder="veya manuel URL"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+            />
+          </div>
+          {formData.coverImage && (
+            <div className="mt-3 relative aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <img
+                src={formData.coverImage}
+                alt="Cover preview"
+                className="w-full h-full object-contain"
               />
             </div>
-          </div>
+          )}
         </div>
 
         {/* Status & Featured */}
