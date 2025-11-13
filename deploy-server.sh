@@ -26,7 +26,10 @@ mkdir -p public/images/uploads
 echo "🏗️  Building application..."
 npm run build
 
-echo "🔄 Restarting PM2..."
+echo "� Copying public folder to build..."
+cp -r public .next/standalone/ 2>/dev/null || echo "No standalone build"
+
+echo "�🔄 Restarting PM2..."
 pm2 restart lny-website || pm2 start npm --name "lny-website" -- start
 
 echo "✅ Deployment completed!"
