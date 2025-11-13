@@ -10,7 +10,7 @@ export const metadata = {
   description: "Mühendislik, teknoloji ve inovasyon üzerine uzman görüşleri ve teknik makaleler."
 }
 
-export const revalidate = 60 // Revalidate every 60 seconds
+export const revalidate = 10 // Revalidate every 10 seconds
 
 export default async function BlogPage() {
   // Fetch published blog posts and categories
